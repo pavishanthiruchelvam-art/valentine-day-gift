@@ -1,19 +1,206 @@
-<!doctype html>
-<html lang="en">
-
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/heart.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <title>Valentine's Proposal</title>
+<meta charset="UTF-8">
+<title>Kishani 💖 Valentine</title>
+<style>
+body{
+margin:0;
+font-family:Arial, sans-serif;
+text-align:center;
+background:linear-gradient(to right,#ff758c,#ff7eb3);
+color:white;
+overflow:hidden;
+}
+.page{display:none;padding-top:80px;}
+button{
+padding:12px 25px;
+margin:15px;
+font-size:18px;
+border:none;
+border-radius:25px;
+cursor:pointer;
+}
+.yes{background:#ff1744;color:white;}
+.no{background:white;color:#ff1744;position:relative;}
+.gift{font-size:100px;cursor:pointer;animation:bounce 1.5s infinite;}
+@keyframes bounce{
+0%,100%{transform:translateY(0);}
+50%{transform:translateY(-20px);}
+}
+.rose{
+position:fixed;
+top:-50px;
+font-size:25px;
+animation:fall 4s linear infinite;
+}
+@keyframes fall{
+0%{transform:translateY(0);}
+100%{transform:translateY(100vh);}
+}
+.grid{
+display:grid;
+grid-template-columns:repeat(3,100px);
+gap:5px;
+justify-content:center;
+margin-top:20px;
+}
+.cell{
+width:100px;height:100px;
+background:white;
+color:#ff1744;
+font-size:40px;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+}
+img{width:250px;border-radius:20px;margin-top:20px;}
+.letter{
+width:80%;
+margin:auto;
+background:white;
+color:black;
+padding:20px;
+border-radius:15px;
+margin-top:20px;
+}
+</style>
 </head>
-
 <body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.jsx"></script>
-</body>
 
+<!-- PAGE 1 -->
+<div class="page" id="page1" style="display:block;">
+<div class="gift" onclick="showProposal()">🎁</div>
+<h2>Open Your Gift 💝</h2>
+</div>
+
+<div class="page" id="proposal">
+<h1>Will You Be My Valentine? 💖</h1>
+<button class="yes" onclick="roseEffect()">Yes 😍</button>
+<button class="no" id="noBtn">No 😜</button>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="page2">
+<h1>Let's Play a Game? 🎮</h1>
+<button class="yes" onclick="startGame()">Yes 😘</button>
+<button class="no" onclick="cry()">No 😭</button>
+<div id="crySection"></div>
+</div>
+
+<!-- GAME -->
+<div class="page" id="gamePage">
+<h2>Tic Tac Toe ❤️</h2>
+<div class="grid" id="grid"></div>
+<h3 id="result"></h3>
+<button onclick="nextPage()">Go Next ➡️</button>
+</div>
+
+<!-- FINAL PAGE -->
+<div class="page" id="finalPage">
+<h2>Final Surprise 💌</h2>
+<button onclick="readLetter()">Read Letter ❤️</button>
+<div id="letterSection"></div>
+</div>
+
+<script>
+
+function showProposal(){
+document.getElementById("page1").style.display="none";
+document.getElementById("proposal").style.display="block";
+}
+
+let noBtn=document.getElementById("noBtn");
+noBtn.addEventListener("mouseover",function(){
+noBtn.style.position="absolute";
+noBtn.style.left=Math.random()*window.innerWidth+"px";
+noBtn.style.top=Math.random()*window.innerHeight+"px";
+});
+
+function roseEffect(){
+for(let i=0;i<30;i++){
+let rose=document.createElement("div");
+rose.className="rose";
+rose.innerHTML="🌹";
+rose.style.left=Math.random()*100+"vw";
+rose.style.animationDuration=2+Math.random()*3+"s";
+document.body.appendChild(rose);
+setTimeout(()=>rose.remove(),4000);
+}
+setTimeout(()=>{
+document.getElementById("proposal").style.display="none";
+document.getElementById("page2").style.display="block";
+},2000);
+}
+
+function cry(){
+document.getElementById("crySection").innerHTML=
+"<h2>😭 Please Say Yes 😭</h2><button onclick='goBack()'>Go Back</button>";
+}
+function goBack(){
+document.getElementById("crySection").innerHTML="";
+}
+
+let currentPlayer="❤️";
+let board=["","","","","","","","",""];
+
+function startGame(){
+document.getElementById("page2").style.display="none";
+document.getElementById("gamePage").style.display="block";
+createBoard();
+}
+
+function createBoard(){
+let grid=document.getElementById("grid");
+grid.innerHTML="";
+board=["","","","","","","","",""];
+currentPlayer="❤️";
+for(let i=0;i<9;i++){
+let cell=document.createElement("div");
+cell.className="cell";
+cell.onclick=function(){play(i)};
+grid.appendChild(cell);
+}
+}
+
+function play(i){
+if(board[i]=="" && currentPlayer=="❤️"){
+board[i]="❤️";
+document.getElementsByClassName("cell")[i].innerHTML="❤️";
+currentPlayer="O";
+autoPlay();
+}
+}
+
+function autoPlay(){
+for(let i=0;i<9;i++){
+if(board[i]==""){
+board[i]="O";
+document.getElementsByClassName("cell")[i].innerHTML="O";
+break;
+}
+}
+checkWin();
+currentPlayer="❤️";
+}
+
+function checkWin(){
+document.getElementById("result").innerHTML=
+"Kishani Wins ❤️ You won my heart 💋";
+}
+
+function nextPage(){
+document.getElementById("gamePage").style.display="none";
+document.getElementById("finalPage").style.display="block";
+}
+
+function readLetter(){
+document.getElementById("letterSection").innerHTML=
+"<img src='photo.jpg'><div class='letter'>hi di pondatti....ni vittu ponu solla na onnum on lver illa on purushe namakku wed aachi nu palamura na sollitte ni endhu ennaikkum onna vittu poga matte life long en kudave iru kandippa pala velantaine day onna kondaduvom love you always di kannukutty ❤️</div>";
+}
+
+</script>
+
+</body>
 </html>
